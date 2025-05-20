@@ -38,6 +38,7 @@ public class MateriaController {
     }
 
     @GetMapping("/{id}")
+    @Transactional
     public ResponseEntity<MateriaDTO> obtenerMateriaPorId(@PathVariable Long id) {
         long inicio = System.currentTimeMillis();
         logger.info("[MATERIA] Inicio obtenerMateriaPorId: {}", inicio);
@@ -67,6 +68,7 @@ public class MateriaController {
     }
 
     @PutMapping("/{id}")
+    @Transactional
     public ResponseEntity<MateriaDTO> actualizarMateria(@PathVariable Long id, @RequestBody MateriaDTO materia) {
         //MateriaDTO materiaDTO = new MateriaDTO(materia.getId(), materia.getNombreMateria(), materia.getCodigoUnico());
         MateriaDTO actualizadaDTO = materiaService.actualizarMateria(id, materia);

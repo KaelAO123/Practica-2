@@ -62,6 +62,8 @@ public class Materia implements Serializable {
     )
     private List<Materia> prerequisitos;
 
+    
+
     /**
      * Lista de materias para las que esta materia es prerequisito.
      */

@@ -23,6 +23,13 @@ public class Docente extends Persona {
     @Column(name = "departamento", nullable = false) // Columna no nula
     private String departamento;
 
+    @ManyToMany(fetch = FetchType.LAZY) // Relación muchos a muchos con la entidad Materia
+    @JoinTable(name = "docente_materia", // Nombre de la tabla intermedia
+            joinColumns = @JoinColumn(name = "id_docente"), // Columna que referencia al estudiante
+            inverseJoinColumns = @JoinColumn(name = "id_materia")  // Columna que referencia a la materia 
+    )
+    private List<Materia> materias;
+
     /**
      * Lista de evaluaciones asociadas al docente.
      */

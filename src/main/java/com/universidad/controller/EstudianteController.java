@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired; // Importa la anotación Autowired de Spring
 import org.springframework.http.ResponseEntity; // Importa la clase ResponseEntity de Spring para manejar respuestas HTTP
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.http.HttpStatus; // Importa la clase HttpStatus de Spring para manejar códigos de estado HTTP
 import org.springframework.web.bind.annotation.*; // Importa las anotaciones de Spring para controladores web
@@ -32,6 +33,7 @@ public class EstudianteController { // Define la clase EstudianteController
     }
 
     @GetMapping // Anotación que indica que este método maneja solicitudes GET
+    @PreAuthorize("hasRole('DOCENTE') or hasRole('ADMIN')") 
     public ResponseEntity<List<EstudianteDTO>> obtenerTodosLosEstudiantes() { // Método para obtener una lista de todos los EstudianteDTO
         long inicio = System.currentTimeMillis();
         logger.info("[ESTUDIANTE] Inicio obtenerTodosLosEstudiantes: {}", inicio);
@@ -42,6 +44,7 @@ public class EstudianteController { // Define la clase EstudianteController
     }
 
     @GetMapping("/inscripcion/{numeroInscripcion}") // Anotación que indica que este método maneja solicitudes GET con un parámetro de ruta
+    @PreAuthorize("hasRole('DOCENTE') or hasRole('ADMIN')") 
     public ResponseEntity<EstudianteDTO> obtenerEstudiantePorNumeroInscripcion(
         @PathVariable String numeroInscripcion) { // Método para obtener un estudiante por su número de inscripción
         long inicio = System.currentTimeMillis();
@@ -53,6 +56,7 @@ public class EstudianteController { // Define la clase EstudianteController
     }
 
     @GetMapping("/{id}/materias")
+    @PreAuthorize("hasRole('DOCENTE') or hasRole('ADMIN')") 
     public ResponseEntity<List<Materia>> obtenerMateriasDeEstudiante(
         @PathVariable("id") Long estudianteId) {
         List<Materia> materias = estudianteService.obtenerMateriasDeEstudiante(estudianteId);
@@ -60,6 +64,8 @@ public class EstudianteController { // Define la clase EstudianteController
     }
 
     @GetMapping("/{id}/lock")
+    @PreAuthorize("hasRole('DOCENTE') or hasRole('ADMIN')") 
+
     public ResponseEntity<Estudiante> getEstudianteConBloqueo(
         @PathVariable Long id) {
         Estudiante estudiante = estudianteService.obtenerEstudianteConBloqueo(id);
@@ -68,6 +74,7 @@ public class EstudianteController { // Define la clase EstudianteController
 
     @PostMapping // Anotación que indica que este método maneja solicitudes POST
     @Transactional // Anotación que indica que este método debe ejecutarse dentro de una transacción
+    @PreAuthorize("hasRole('ADMIN')") 
     @ResponseStatus(HttpStatus.CREATED) // Anotación que indica que la respuesta HTTP debe tener un estado 201 Created
     public ResponseEntity<EstudianteDTO> crearEstudiante(@Valid @RequestBody EstudianteDTO estudianteDTO) { // Método para crear un nuevo estudiante
         EstudianteDTO nuevoEstudiante = estudianteService.crearEstudiante(estudianteDTO); // Llama al servicio para crear el estudiante
@@ -77,6 +84,7 @@ public class EstudianteController { // Define la clase EstudianteController
     @PutMapping("/{id}") // Anotación que indica que este método maneja solicitudes PUT con un parámetro de ruta
     @Transactional // Anotación que indica que este método debe ejecutarse dentro de una transacción
     @ResponseStatus(HttpStatus.OK) // Anotación que indica que la respuesta HTTP debe tener un estado 200 OK    
+    @PreAuthorize("hasRole('ADMIN')") 
     public ResponseEntity<EstudianteDTO> actualizarEstudiante(
         @PathVariable Long id,
         @RequestBody EstudianteDTO estudianteDTO) { // Método para actualizar un estudiante existente
@@ -85,6 +93,7 @@ public class EstudianteController { // Define la clase EstudianteController
     }
 
     @PutMapping("/{id}/baja") // Anotación que indica que este método maneja solicitudes PUT para dar de baja un estudiante
+    @PreAuthorize("hasRole('ADMIN')") 
     @Transactional // Anotación que indica que este método debe ejecutarse dentro de una transacción
     @ResponseStatus(HttpStatus.OK) // Anotación que indica que la respuesta HTTP debe tener un estado 200 OK
     public ResponseEntity<EstudianteDTO> eliminarEstudiante(
